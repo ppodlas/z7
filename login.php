@@ -31,11 +31,13 @@ if (isset($_POST['loguj'])) {
 
     //sprawdzenie czy to klient
     if (mysqli_num_rows(mysqli_query($polaczenie, "SELECT `name`, `pass` FROM `users` WHERE `name` = '" . $login . "' AND `pass` = '" . $haslo . "';")) > 0) {
-        mysqli_query($polaczenie, "INSERT INTO `logi` SET `logtime` = '" . $time . "', `ipaddr` = '" . $ip . "' WHERE `name` = '" . $login . "';");
+        mysqli_query($polaczenie, "INSERT INTO `logi` SET `logtime` = '" . $time . "', `ipaddr` = '" . $ip . "', `name` = '" . $login . "';");
         $cookie_name = $_POST['login'];
         setcookie('imie', $cookie_name, time() + 3600);
         header("Location: http://ppcloud.pl/zad7/index.php");
-    } else echo '<span class="error">Logowanie nie powiodło się. Login lub Hasło jest nieprawidłowe</span>';
+    } else
+        mysqli_query($polaczenie, "INSERT INTO `logi` SET `error_logtime` = '" . $time . "', `ipaddr` = '" . $ip . "', `name` = '" . $login . "';");
+        echo '<span class="error">Logowanie nie powiodło się. Login lub Hasło jest nieprawidłowe</span>';
 }
 ?>
 
@@ -70,5 +72,10 @@ if (isset($_POST['loguj'])) {
         </div>
     </div>
 </form>
+<center>
+<a href="https://github.com/ppodlas/z7">Repozytorium GitHub</a><br>
+<a href="https://webspeed.intensys.pl/wyniki/136759/">Analiza serwisu</a>
+
+</center>
 </body>
 </html>
